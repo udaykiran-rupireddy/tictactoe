@@ -70,67 +70,40 @@ public class tictactoe {
         }
     }
 
-    public static ArrayList minimax(char [][]board,int depth,boolean is_this_AI_turn){
-        ArrayList<Integer> a=new ArrayList<Integer>();
+    public static int minimax(char [][]board,boolean is_this_AI_turn){
+        String winner_player = check_winner(board);
+
+        if( winner_player!=null && winner_player!="C"){
+            return scores(winner_player);
+        }
+
         if (is_this_AI_turn){
             int score=-2;
-            int least_depth=100;
-            int x=0;
-            int y=0;
             for(int i=0;i<3;i++){
                 for(int j=0;j<3;j++){
                     if(board[i][j]==' '){
                         board[i][j]='O';
-                        ArrayList<Integer> b=minimax(board,depth+1,false);
-                        int curr_score=b.get(0);
-                        String winner_player = check_winner(board);
-                        
+                        int curr_score=minimax(board,false);
                         board[i][j]=' ';
-                        if((curr_score>=score) && (least_depth>depth)){
-                            score=curr_score;
-                            least_depth=depth;
-                            x=i;
-                            y=j;
-                        }
-                        if(winner_player!=null && winner_player!="C"){
-                            break;
-                        }
+                        score=Math.max(score,curr_score);
                     }
                 }
             }
-            a.add(score);
-            a.add(x);
-            a.add(y);
-            return a;
+            return score;
         }
         else{
             int score=2;
-            int least_depth=100;
-            int x=0;
-            int y=0;
             for(int i=0;i<3;i++){
                 for(int j=0;j<3;j++){
                     if(board[i][j]==' '){
                         board[i][j]='X';
-                        ArrayList<Integer> b=minimax(board,depth+1,true);
-                        int curr_score= b.get(0);
-
-                        String winner_player=check_winner(board);
+                        int curr_score= minimax(board,true);
                         board[i][j]=' ';
-                        if((curr_score<=score) && (least_depth>depth)){
-                            score=curr_score;
-                            least_depth=depth;
-                        }
-                        if(winner_player!=null && winner_player!="C"){
-                            break;
-                        }
+                        score=Math.min(score,curr_score);
                     }
                 }
             }
-            a.add(score);
-            a.add(x);
-            a.add(y);
-            return a;
+            return score;
         }
     }
 
@@ -210,12 +183,21 @@ public class tictactoe {
         int score=-2;
         int x=-1;
         int y=-1;
-        
-        ArrayList <Integer> b=minimax(board,0,false);
-        score=b.get(0);
-        x=b.get(1);
-        y=b.get(2);
-        
+        for(int i=0;i<3;i++){
+            for(int j=0;j<3;j++){
+                if(board[i][j]==' '){
+                    board[i][j]='O';
+                    int curr_score=minimax(board,false);
+                    board[i][j]=' ';
+                    if(curr_score>score){
+                        score=curr_score;
+                        x=i;
+                        y=j;
+                    }
+                }
+
+            }
+        }
         ArrayList<Integer> a=new ArrayList<Integer>();
         a.add(x);
         a.add(y);
