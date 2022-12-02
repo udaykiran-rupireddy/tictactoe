@@ -38,7 +38,7 @@ public class tictactoe {
             int u=a.get(0);
             int v=a.get(1);
             board[u][v]='O';
-            System.out.println("The computer has chosen "+(u+1)+" row "+(v+1)+" column"); 
+            System.out.println("The computer has chosen "+(u+1)+((v+1)*3)+" column"); 
             printboard(board);
             //checking who won after computer turn
             if(check_winner(board)=="X"){
